@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CommanderWebApp.Data;
 using CommanderWebApp.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CommanderWebApp.Controllers
 {
@@ -23,6 +24,18 @@ namespace CommanderWebApp.Controllers
         public async Task<IActionResult> Index()
         {
             return View(await _context.Command.ToListAsync());
+        }
+
+        // GET: Commands/ShowSearchFrom
+        public async Task<IActionResult> ShowSearchFrom()
+        {
+            return View();
+        }
+
+        // GET: Commands/ShowSearchResults
+        public async Task<IActionResult> ShowSearchResults(String SearchInput)
+        {
+            return View("Index", await _context.Command.Where(i => i.Name.Contains(SearchInput)).ToListAsync());
         }
 
         // GET: Commands/Details/5
@@ -44,6 +57,7 @@ namespace CommanderWebApp.Controllers
         }
 
         // GET: Commands/Create
+        [Authorize]
         public IActionResult Create()
         {
             return View();
@@ -52,6 +66,7 @@ namespace CommanderWebApp.Controllers
         // POST: Commands/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,CommandLine")] Command command)
@@ -66,6 +81,7 @@ namespace CommanderWebApp.Controllers
         }
 
         // GET: Commands/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -84,6 +100,7 @@ namespace CommanderWebApp.Controllers
         // POST: Commands/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,CommandLine")] Command command)
@@ -117,6 +134,7 @@ namespace CommanderWebApp.Controllers
         }
 
         // GET: Commands/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -135,6 +153,7 @@ namespace CommanderWebApp.Controllers
         }
 
         // POST: Commands/Delete/5
+        [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
